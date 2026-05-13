@@ -332,7 +332,7 @@ function fireAlarm(){
         body: word+' !!!',
         silent: selectedSound==='silent',
         requireInteraction: false,
-        tag: 'silly-alarm'
+        tag: 'silly-alarm-' + Date.now()
       };
       if(iconBase64) opts.icon=iconBase64;
       new Notification('🔔 '+word, opts);
