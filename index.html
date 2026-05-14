@@ -37,9 +37,18 @@
   .btn-primary:hover{background:#f0ba30;border-color:#f0ba30}
   .btn-danger{color:var(--danger-text);border-color:var(--danger-border)}
   .btn-danger:hover{background:rgba(232,96,96,.08)}
-  .sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+  .btn-share{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text);font-size:14px;padding:12px;font-weight:500}
+  .btn-share:hover{background:rgba(56,139,253,.2)}
+  .sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
   .snd-btn{padding:10px;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:4px}
   .snd-btn.active{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border)}
+  .custom-sound-box{border:1px dashed var(--border2);border-radius:10px;padding:12px;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:8px}
+  .custom-sound-box.has-sound{border-style:solid;border-color:rgba(245,197,66,.3);background:rgba(245,197,66,.04)}
+  .custom-sound-name{font-size:13px;color:var(--accent);font-weight:500;display:none}
+  .custom-sound-box.has-sound .custom-sound-name{display:block}
+  .custom-sound-hint{font-size:12px;color:var(--muted)}
+  .custom-btns{display:flex;gap:8px}
+  .custom-btns button{flex:1;padding:8px;font-size:12px}
   .mode-row{display:flex;gap:8px;margin-bottom:1.25rem}
   .mode-btn{flex:1;font-size:13px;padding:9px}
   .mode-btn.active{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border)}
@@ -47,20 +56,17 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer}
   .slider-row{display:flex;gap:10px;align-items:center;margin-bottom:1.25rem}
   .slider-val{font-size:15px;font-weight:500;min-width:56px;text-align:right;color:var(--accent)}
-
-  /* image section */
   .img-section{margin-bottom:1.25rem}
-  .img-drop{width:100%;height:100px;border:2px dashed var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;position:relative;overflow:hidden;background:var(--surface2)}
+  .img-drop{width:100%;height:90px;border:2px dashed var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;position:relative;overflow:hidden;background:var(--surface2)}
   .img-drop:hover{border-color:var(--accent)}
   .img-drop.has-img{border-style:solid;border-color:rgba(255,255,255,.2)}
   .img-drop img{width:100%;height:100%;object-fit:cover;display:none;border-radius:8px}
   .img-drop.has-img img{display:block}
-  .img-drop .placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:13px;pointer-events:none}
+  .img-drop .placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:13px;pointer-events:none}
   .img-drop.has-img .placeholder{display:none}
-  .img-preview-label{font-size:11px;color:var(--muted);text-align:center;margin-top:4px;min-height:16px}
+  .img-label{font-size:11px;color:var(--muted);text-align:center;margin-top:4px;min-height:16px}
   .img-actions{display:flex;gap:8px;margin-top:8px}
   .img-actions button{flex:1;padding:8px;font-size:12px}
-
   .status-card{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
   .status-inner{display:flex;justify-content:space-between;align-items:center}
   .countdown{font-family:'Syne',sans-serif;font-size:2.75rem;font-weight:800;color:var(--accent);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
@@ -75,6 +81,12 @@
   .notif-bar button{width:auto;padding:6px 14px;font-size:12px;margin-top:8px}
   .bar-denied{background:rgba(232,96,96,.1);border:1px solid var(--danger-border);color:var(--danger-text)}
   .bar-default{background:rgba(245,197,66,.08);border:1px solid rgba(245,197,66,.25);color:var(--muted)}
+  .share-result{display:none;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px;margin-top:8px}
+  .share-url{font-size:11px;color:var(--muted);word-break:break-all;margin-bottom:8px;line-height:1.5}
+  .share-actions{display:flex;gap:8px}
+  .share-actions button{flex:1;padding:8px;font-size:12px}
+  .copied-badge{font-size:12px;color:var(--success-text);text-align:center;margin-top:6px;min-height:18px}
+  .shared-banner{display:none;background:rgba(245,197,66,.08);border:1px solid rgba(245,197,66,.25);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--accent);margin-bottom:1rem;text-align:center}
   .footer{text-align:center;font-size:12px;color:var(--muted);margin-top:.5rem}
 </style>
 </head>
@@ -84,7 +96,11 @@
   <div class="header">
     <span class="bell">🔔</span>
     <h1>Silly Alarm</h1>
-    <p>Your personal ridiculous notifier</p>
+    <p id="header-sub">Your personal ridiculous notifier</p>
+  </div>
+
+  <div class="shared-banner" id="shared-banner">
+    🔗 Loaded from a shared link! You can edit anything and start it.
   </div>
 
   <div class="notif-bar bar-denied" id="bar-denied">
@@ -103,26 +119,35 @@
 
     <label>Image (shown in notification)</label>
     <div class="img-section">
-      <div class="img-drop" id="img-drop" onclick="document.getElementById('file-input').click()">
+      <div class="img-drop" id="img-drop" onclick="document.getElementById('file-img').click()">
         <img id="thumb-img" alt="preview" />
-        <div class="placeholder">
-          <span style="font-size:28px">📷</span>
-          <span>Click to upload a photo</span>
-        </div>
+        <div class="placeholder"><span style="font-size:26px">📷</span><span>Click to upload</span></div>
       </div>
-      <p class="img-preview-label" id="img-label">No image selected</p>
+      <p class="img-label" id="img-label">No image selected</p>
       <div class="img-actions">
-        <button onclick="document.getElementById('file-input').click()">📁 Choose photo</button>
+        <button onclick="document.getElementById('file-img').click()">📁 Choose photo</button>
         <button class="btn-danger" onclick="clearImg()">🗑 Remove</button>
       </div>
     </div>
-    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="onFile()" />
-
-    <!-- hidden canvas for resizing -->
+    <input type="file" id="file-img" accept="image/*" style="display:none" onchange="onImgFile()" />
     <canvas id="resize-canvas" style="display:none"></canvas>
 
     <label>Sound — click to preview</label>
     <div class="sound-grid" id="sound-grid"></div>
+
+    <div class="custom-sound-box" id="custom-sound-box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--muted)">🎵 Custom sound</span>
+        <span class="custom-sound-name" id="custom-sound-name"></span>
+      </div>
+      <p class="custom-sound-hint" id="custom-sound-hint">Upload an MP3 or WAV file to use as your alarm sound</p>
+      <div class="custom-btns">
+        <button onclick="document.getElementById('file-snd').click()">📂 Upload sound</button>
+        <button id="test-custom-btn" style="display:none" onclick="testCustomSound()">▶ Test</button>
+        <button class="btn-danger" id="clear-custom-btn" style="display:none" onclick="clearCustomSound()">🗑</button>
+      </div>
+    </div>
+    <input type="file" id="file-snd" accept="audio/*" style="display:none" onchange="onSoundFile()" />
 
     <label>Alarm mode</label>
     <div class="mode-row">
@@ -136,7 +161,18 @@
       <span class="slider-val" id="time-out">10s</span>
     </div>
 
-    <button class="btn-primary" id="start-btn" onclick="startAlarm()">▶ Start alarm</button>
+    <button class="btn-primary" id="start-btn" onclick="startAlarm()" style="margin-bottom:10px">▶ Start alarm</button>
+    <button class="btn-share" onclick="generateShareLink()">🔗 Share this alarm with a friend</button>
+
+    <div class="share-result" id="share-result">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:6px">Share this link — your friend will see your word, image & settings:</p>
+      <p class="share-url" id="share-url"></p>
+      <div class="share-actions">
+        <button onclick="copyLink()">📋 Copy link</button>
+        <button onclick="openLink(document.getElementById('share-url').textContent)">🌐 Open</button>
+      </div>
+      <p class="copied-badge" id="copied-badge"></p>
+    </div>
   </div>
 
   <div class="status-card" id="status-card">
@@ -154,23 +190,23 @@
     <p class="fired-sub" id="fired-sub">check your screen</p>
   </div>
 
-  <p class="footer">Keep this tab open and browser running</p>
+  <p class="footer">Keep this tab open and browser running • <a href="https://anas711m-design.github.io/Faris-alarm/" style="color:var(--muted)">silly-alarm</a></p>
 </div>
 
 <script>
 let mode='once', timerRef=null, countdownRef=null, fireAt=null;
 let selectedSound='beep', audioCtx=null;
-let imageBase64=null; // full display image
-let iconBase64=null;  // resized 128x128 for notification
+let imageBase64=null, iconBase64=null;
+let customSoundBuffer=null, customSoundBase64=null, customSoundName=null;
 
 function getCtx(){
   if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
   return audioCtx;
 }
 
-const sounds=[
+const builtinSounds=[
   {id:'beep',  label:'Beep',  emoji:'〰️', fn:()=>{const c=getCtx();[0,.18,.36].forEach(t=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(.4,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.15);o.start(c.currentTime+t);o.stop(c.currentTime+t+.2);});}},
-  {id:'alarm', label:'Alarm', emoji:'🔔', fn:()=>{const c=getCtx();for(let i=0;i<6;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=i%2===0?1047:784;o.type='square';const t=c.currentTime+i*.12;g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.1);o.start(t);o.stop(t+.12);}}},
+  {id:'alarm', label:'Alarm', emoji:'🔔', fn:()=>{const c=getCtx();for(let i=0;i<6;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=i%2===0?1047:784;o.type='square';const t=c.currentTime+i*.12;g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);o.start(t);o.stop(t+.14);}}},
   {id:'ding',  label:'Ding',  emoji:'✨', fn:()=>{const c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=1319;o.type='sine';g.gain.setValueAtTime(.5,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.2);o.start(c.currentTime);o.stop(c.currentTime+1.2);}},
   {id:'laser', label:'Laser', emoji:'⚡', fn:()=>{const c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(1400,c.currentTime);o.frequency.exponentialRampToValueAtTime(200,c.currentTime+.4);g.gain.setValueAtTime(.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start(c.currentTime);o.stop(c.currentTime+.4);}},
   {id:'tada',  label:'Ta-da', emoji:'🎉', fn:()=>{const c=getCtx();[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='triangle';const t=c.currentTime+i*.1;g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.001,t+.25);o.start(t);o.stop(t+.3);});}},
@@ -180,55 +216,110 @@ const sounds=[
 
 function buildSoundGrid(){
   const grid=document.getElementById('sound-grid');
-  sounds.forEach(s=>{
+  builtinSounds.forEach(s=>{
     const btn=document.createElement('button');
     btn.className='snd-btn'; btn.id='snd-'+s.id;
     btn.innerHTML=`<span>${s.emoji} ${s.label}</span>${s.id!=='silent'?'<span style="font-size:11px;opacity:.4">▶</span>':''}`;
-    btn.onclick=()=>{selectSound(s.id); if(s.id!=='silent') s.fn(); save();};
+    btn.onclick=()=>{ selectSound(s.id); if(s.id!=='silent') s.fn(); save(); };
     grid.appendChild(btn);
   });
 }
 
 function selectSound(id){
   selectedSound=id;
-  sounds.forEach(s=>{
+  builtinSounds.forEach(s=>{
     const b=document.getElementById('snd-'+s.id);
     if(b) b.className='snd-btn'+(s.id===id?' active':'');
   });
+  // deactivate custom if switching to builtin
+  const cb=document.getElementById('custom-sound-box');
+  if(id!=='custom') cb.style.outline='none';
+  else cb.style.outline='1px solid rgba(245,197,66,.5)';
 }
 
-// Resize image to 128x128 using canvas — this is what actually shows in notifications
-function resizeToIcon(src, cb){
+// ── CUSTOM SOUND ──────────────────────────────────────────
+function onSoundFile(){
+  const file=document.getElementById('file-snd').files[0];
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    customSoundBase64=e.target.result;
+    customSoundName=file.name;
+    // decode for playback
+    const ctx=getCtx();
+    ctx.decodeAudioData(e.target.result.slice(0), buf=>{
+      customSoundBuffer=buf;
+    }, err=>console.log('decode err',err));
+    document.getElementById('custom-sound-name').textContent=file.name;
+    document.getElementById('custom-sound-hint').textContent='Ready! Click test to preview.';
+    document.getElementById('custom-sound-box').classList.add('has-sound');
+    document.getElementById('test-custom-btn').style.display='';
+    document.getElementById('clear-custom-btn').style.display='';
+    selectSound('custom');
+    save();
+  };
+  r.readAsArrayBuffer(file);
+}
+
+function testCustomSound(){
+  if(!customSoundBuffer) return;
+  const ctx=getCtx();
+  const src=ctx.createBufferSource();
+  src.buffer=customSoundBuffer;
+  src.connect(ctx.destination);
+  src.start(0);
+}
+
+function playCustomSound(){
+  if(customSoundBase64){
+    // re-decode each time to allow replay
+    const ctx=getCtx();
+    // clone the buffer
+    const src=ctx.createBufferSource();
+    src.buffer=customSoundBuffer;
+    src.connect(ctx.destination);
+    src.start(0);
+  }
+}
+
+function clearCustomSound(){
+  customSoundBase64=null; customSoundBuffer=null; customSoundName=null;
+  document.getElementById('file-snd').value='';
+  document.getElementById('custom-sound-name').textContent='';
+  document.getElementById('custom-sound-hint').textContent='Upload an MP3 or WAV file to use as your alarm sound';
+  document.getElementById('custom-sound-box').classList.remove('has-sound');
+  document.getElementById('test-custom-btn').style.display='none';
+  document.getElementById('clear-custom-btn').style.display='none';
+  if(selectedSound==='custom') selectSound('beep');
+  save();
+}
+
+// ── IMAGE ─────────────────────────────────────────────────
+function resizeToIcon(src,cb){
   const img=new Image();
   img.onload=()=>{
     const canvas=document.getElementById('resize-canvas');
     canvas.width=128; canvas.height=128;
     const ctx=canvas.getContext('2d');
-    // crop square from center
     const size=Math.min(img.width,img.height);
     const sx=(img.width-size)/2, sy=(img.height-size)/2;
-    ctx.drawImage(img, sx, sy, size, size, 0, 0, 128, 128);
+    ctx.drawImage(img,sx,sy,size,size,0,0,128,128);
     cb(canvas.toDataURL('image/png'));
   };
   img.src=src;
 }
 
-function onFile(){
-  const file=document.getElementById('file-input').files[0];
+function onImgFile(){
+  const file=document.getElementById('file-img').files[0];
   if(!file) return;
   const r=new FileReader();
   r.onload=e=>{
     const src=e.target.result;
-    // show full image as preview
     imageBase64=src;
     document.getElementById('thumb-img').src=src;
     document.getElementById('img-drop').classList.add('has-img');
     document.getElementById('img-label').textContent=file.name+' ('+Math.round(file.size/1024)+'KB)';
-    // resize for notification icon
-    resizeToIcon(src, resized=>{
-      iconBase64=resized;
-      save();
-    });
+    resizeToIcon(src,resized=>{ iconBase64=resized; save(); });
   };
   r.readAsDataURL(file);
 }
@@ -238,21 +329,93 @@ function clearImg(){
   document.getElementById('thumb-img').src='';
   document.getElementById('img-drop').classList.remove('has-img');
   document.getElementById('img-label').textContent='No image selected';
-  document.getElementById('file-input').value='';
+  document.getElementById('file-img').value='';
   save();
 }
 
+// ── SHARE LINK ────────────────────────────────────────────
+// We encode word + sound + mode + secs + image into the URL hash as base64 JSON
+// Custom sound is NOT shareable (too large for URL) — we note that to user
+
+function generateShareLink(){
+  const payload={
+    word: document.getElementById('word-input').value.trim(),
+    sound: selectedSound==='custom' ? 'beep' : selectedSound,
+    mode: mode,
+    secs: parseInt(document.getElementById('time-slider').value),
+    icon: iconBase64||null
+  };
+  const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url=window.location.origin+window.location.pathname+'#share='+encoded;
+  document.getElementById('share-url').textContent=url;
+  document.getElementById('share-result').style.display='block';
+  if(selectedSound==='custom'){
+    document.getElementById('copied-badge').textContent='⚠️ Custom sound not shareable — friend will hear Beep instead';
+    document.getElementById('copied-badge').style.color='var(--accent)';
+  }
+}
+
+function copyLink(){
+  const url=document.getElementById('share-url').textContent;
+  navigator.clipboard.writeText(url).then(()=>{
+    document.getElementById('copied-badge').textContent='✅ Copied!';
+    document.getElementById('copied-badge').style.color='var(--success-text)';
+    setTimeout(()=>{ document.getElementById('copied-badge').textContent=''; },2500);
+  });
+}
+
+function loadFromHash(){
+  const hash=window.location.hash;
+  if(!hash.startsWith('#share=')) return false;
+  try{
+    const encoded=hash.slice(8);
+    const d=JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    if(d.word) document.getElementById('word-input').value=d.word;
+    selectSound(d.sound||'beep');
+    setMode(d.mode||'once');
+    if(d.secs){ document.getElementById('time-slider').value=d.secs; updateSlider(); }
+    if(d.icon){ iconBase64=d.icon; imageBase64=d.icon; document.getElementById('thumb-img').src=d.icon; document.getElementById('img-drop').classList.add('has-img'); document.getElementById('img-label').textContent='Shared image'; }
+    document.getElementById('shared-banner').style.display='block';
+    return true;
+  }catch(e){ return false; }
+}
+
+// ── PERSIST ───────────────────────────────────────────────
+function save(){
+  try{
+    localStorage.setItem('silly-alarm',JSON.stringify({
+      word: document.getElementById('word-input').value,
+      sound: selectedSound==='custom'?'custom':selectedSound,
+      mode, secs: document.getElementById('time-slider').value,
+      image: imageBase64, icon: iconBase64,
+      customSoundName
+    }));
+  }catch(e){}
+}
+
+function loadSaved(){
+  if(loadFromHash()) return; // shared link takes priority
+  try{
+    const d=JSON.parse(localStorage.getItem('silly-alarm')||'{}');
+    if(d.word) document.getElementById('word-input').value=d.word;
+    selectSound(d.sound||'beep');
+    setMode(d.mode||'once');
+    if(d.secs){ document.getElementById('time-slider').value=d.secs; updateSlider(); }
+    if(d.image){ imageBase64=d.image; iconBase64=d.icon||null; document.getElementById('thumb-img').src=d.image; document.getElementById('img-drop').classList.add('has-img'); document.getElementById('img-label').textContent='Saved image'; }
+    if(d.customSoundName){ document.getElementById('custom-sound-name').textContent=d.customSoundName+'  (re-upload to use)'; document.getElementById('custom-sound-box').classList.add('has-sound'); document.getElementById('custom-sound-hint').textContent='Re-upload the file to restore custom sound.'; }
+  }catch(e){ selectSound('beep'); setMode('once'); }
+}
+
+// ── UTILS ─────────────────────────────────────────────────
 function fmtSecs(s){
   s=Math.max(0,Math.round(s));
   return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 }
-
 function updateSlider(){
   const v=parseInt(document.getElementById('time-slider').value);
   document.getElementById('time-out').textContent=v<60?v+'s':Math.floor(v/60)+'m'+(v%60?v%60+'s':'');
   save();
 }
-
 function setMode(m){
   mode=m;
   document.getElementById('mode-once').className='mode-btn'+(m==='once'?' active':'');
@@ -260,46 +423,13 @@ function setMode(m){
   document.getElementById('slider-label').textContent=m==='once'?'Fire after':'Repeat every';
   save();
 }
-
-function save(){
-  try{
-    localStorage.setItem('silly-alarm', JSON.stringify({
-      word: document.getElementById('word-input').value,
-      sound: selectedSound,
-      mode: mode,
-      secs: document.getElementById('time-slider').value,
-      image: imageBase64,
-      icon: iconBase64
-    }));
-  }catch(e){}
-}
-
-function loadSaved(){
-  try{
-    const d=JSON.parse(localStorage.getItem('silly-alarm')||'{}');
-    if(d.word) document.getElementById('word-input').value=d.word;
-    selectSound(d.sound||'beep');
-    setMode(d.mode||'once');
-    if(d.secs){document.getElementById('time-slider').value=d.secs; updateSlider();}
-    if(d.image){
-      imageBase64=d.image; iconBase64=d.icon||null;
-      document.getElementById('thumb-img').src=d.image;
-      document.getElementById('img-drop').classList.add('has-img');
-      document.getElementById('img-label').textContent='Saved image';
-    }
-  }catch(e){selectSound('beep'); setMode('once');}
-}
-
 function updateNotifBar(){
-  document.getElementById('bar-denied').style.display=('Notification' in window && Notification.permission==='denied')?'block':'none';
-  document.getElementById('bar-default').style.display=('Notification' in window && Notification.permission==='default')?'block':'none';
+  document.getElementById('bar-denied').style.display=('Notification' in window&&Notification.permission==='denied')?'block':'none';
+  document.getElementById('bar-default').style.display=('Notification' in window&&Notification.permission==='default')?'block':'none';
 }
+async function askPerm(){ await Notification.requestPermission(); updateNotifBar(); }
 
-async function askPerm(){
-  await Notification.requestPermission();
-  updateNotifBar();
-}
-
+// ── ALARM ─────────────────────────────────────────────────
 function startCountdown(secs){
   if(countdownRef) clearInterval(countdownRef);
   fireAt=Date.now()+secs*1000;
@@ -311,73 +441,62 @@ function startCountdown(secs){
   },250);
 }
 
+function playSound(){
+  if(selectedSound==='custom' && customSoundBuffer){
+    playCustomSound();
+  } else {
+    const s=builtinSounds.find(x=>x.id===selectedSound);
+    if(s) s.fn();
+  }
+}
+
 function fireAlarm(){
   const word=document.getElementById('word-input').value.trim()||'HEY!';
-
-  // flash banner
   const banner=document.getElementById('fired-banner');
   document.getElementById('fired-word').textContent=word.toUpperCase()+' !!!';
   document.getElementById('fired-sub').textContent=selectedSound==='silent'?'silent mode':'🔔 check your screen';
   banner.style.animation='none'; banner.offsetHeight; banner.style.animation='popIn .25s ease';
   banner.style.display='block';
-  setTimeout(()=>banner.style.display='none', 5000);
-
-  // play sound
-  sounds.find(x=>x.id===selectedSound)?.fn();
-
-  // fire notification with properly sized icon
+  setTimeout(()=>banner.style.display='none',5000);
+  playSound();
   if(Notification.permission==='granted'){
     try{
-      const opts={
-        body: word+' !!!',
-        silent: selectedSound==='silent',
-        requireInteraction: false,
-        tag: 'silly-alarm-' + Date.now()
-      };
+      const opts={ body:word+' !!!', silent:selectedSound==='silent', requireInteraction:false, tag:'silly-alarm-'+Date.now() };
       if(iconBase64) opts.icon=iconBase64;
       new Notification('🔔 '+word, opts);
-    }catch(e){ console.log('Notif error:', e); }
+    }catch(e){}
   }
 }
 
 async function startAlarm(){
   const word=document.getElementById('word-input').value.trim();
-  if(!word){document.getElementById('word-input').focus(); return;}
-  if('Notification' in window && Notification.permission==='default'){
-    await Notification.requestPermission();
-    updateNotifBar();
-  }
+  if(!word){ document.getElementById('word-input').focus(); return; }
+  if('Notification' in window && Notification.permission==='default'){ await Notification.requestPermission(); updateNotifBar(); }
   stopAlarm();
   const secs=parseInt(document.getElementById('time-slider').value);
   document.getElementById('status-card').style.display='block';
   document.getElementById('fired-banner').style.display='none';
   document.getElementById('start-btn').textContent='🔄 Restart';
-
   if(mode==='once'){
     document.getElementById('status-lbl').textContent='Fires in';
     startCountdown(secs);
-    timerRef=setTimeout(()=>{
-      fireAlarm();
-      if(countdownRef) clearInterval(countdownRef);
-      document.getElementById('countdown').textContent='00:00';
-      document.getElementById('start-btn').textContent='▶ Start alarm';
-      timerRef=null;
-    }, secs*1000);
+    timerRef=setTimeout(()=>{ fireAlarm(); if(countdownRef) clearInterval(countdownRef); document.getElementById('countdown').textContent='00:00'; document.getElementById('start-btn').textContent='▶ Start alarm'; timerRef=null; },secs*1000);
   } else {
     document.getElementById('status-lbl').textContent='Next in';
     startCountdown(secs);
-    timerRef=setInterval(()=>{fireAlarm(); startCountdown(secs);}, secs*1000);
+    timerRef=setInterval(()=>{ fireAlarm(); startCountdown(secs); },secs*1000);
   }
 }
 
 function stopAlarm(){
-  if(timerRef){clearTimeout(timerRef); clearInterval(timerRef); timerRef=null;}
-  if(countdownRef){clearInterval(countdownRef); countdownRef=null;}
+  if(timerRef){ clearTimeout(timerRef); clearInterval(timerRef); timerRef=null; }
+  if(countdownRef){ clearInterval(countdownRef); countdownRef=null; }
   document.getElementById('status-card').style.display='none';
   document.getElementById('fired-banner').style.display='none';
   document.getElementById('start-btn').textContent='▶ Start alarm';
 }
 
+// ── INIT ──────────────────────────────────────────────────
 buildSoundGrid();
 loadSaved();
 updateNotifBar();
