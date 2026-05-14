@@ -334,20 +334,27 @@ function clearImg(){
 }
 
 // ── SHARE LINK ────────────────────────────────────────────
-// We encode word + sound + mode + secs + image into the URL hash as base64 JSON
-// Custom sound is NOT shareable (too large for URL) — we note that to user
+async function generateShareLink(){
+  const btn=document.querySelector('.btn-share');
+  btn.textContent='⏳ Generating...'; btn.disabled=true;
 
-function generateShareLink(){
   const payload={
     word: document.getElementById('word-input').value.trim(),
     sound: selectedSound==='custom' ? 'beep' : selectedSound,
-    mode: mode,
-    secs: parseInt(document.getElementById('time-slider').value),
+    mode, secs: parseInt(document.getElementById('time-slider').value),
     icon: iconBase64||null
   };
   const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const url=window.location.origin+window.location.pathname+'#share='+encoded;
-  document.getElementById('share-url').textContent=url;
+  const longUrl=window.location.origin+window.location.pathname+'#share='+encoded;
+
+  let finalUrl=longUrl;
+  try{
+    const res=await fetch('https://tinyurl.com/api-create.php?url='+encodeURIComponent(longUrl));
+    if(res.ok){ const txt=await res.text(); if(txt.startsWith('https://')) finalUrl=txt.trim(); }
+  }catch(e){}
+
+  btn.textContent='🔗 Share this alarm with a friend'; btn.disabled=false;
+  document.getElementById('share-url').textContent=finalUrl;
   document.getElementById('share-result').style.display='block';
   if(selectedSound==='custom'){
     document.getElementById('copied-badge').textContent='⚠️ Custom sound not shareable — friend will hear Beep instead';
